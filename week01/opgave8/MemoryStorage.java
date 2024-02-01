@@ -1,6 +1,5 @@
 package week01.opgave8;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +23,7 @@ public class MemoryStorage<DataType> implements DataStorage<DataType> {
     @Override
     public void delete(String source) {
         storedData.remove(source);
-    };
+    }
 
 
 }

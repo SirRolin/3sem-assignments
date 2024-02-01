@@ -2,7 +2,7 @@ package week01.opgave3;
 
 public class Employee {
     public String name;
-    public int age = 0;
+    public int age;
     public Employee(String name, int age) {
         this.name = name;
         this.age = age;

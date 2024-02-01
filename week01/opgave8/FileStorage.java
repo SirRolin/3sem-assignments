@@ -17,12 +17,11 @@ public class FileStorage<DataType extends java.io.Serializable> implements DataS
     @Override
     public DataType retrieve(String source) {
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(source))){
+            //noinspection unchecked
             return (DataType) ois.readObject();
         } catch (FileNotFoundException e) {
             return null;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

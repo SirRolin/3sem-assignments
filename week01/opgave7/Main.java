@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,7 +22,6 @@ public class Main {
                     transactions.add(new Transaction(Integer.parseInt(line[0].trim()), Integer.parseInt(line[1].trim()), line[2].trim()));
                 else
                     System.err.println(String.join("", line) + " - does not have only 2 commas.");
-                ;
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -38,13 +36,11 @@ public class Main {
         Map<String, List<Transaction>> mapped = transactions.stream().collect(Collectors.groupingBy(Transaction::getCurrency));
         //// the initiator of the Collection.
         Map<String, Integer> currencyTransactions = mapped.keySet().stream()
-                .map(currency -> {
-                            return new Object[]{currency,
-                                    mapped.get(currency).stream()
-                                            .mapToInt(Transaction::getAmount)
-                                            .reduce(Integer::sum)
-                                            .orElse(0)
-                            };
+                .map(currency -> new Object[]{currency,
+                                mapped.get(currency).stream()
+                                        .mapToInt(Transaction::getAmount)
+                                        .reduce(Integer::sum)
+                                        .orElse(0)
                         }
                 ).collect(Collector.of(HashMap::new,
                         (a, b) -> {
@@ -85,12 +81,12 @@ public class Main {
         Map<Integer, Float> map = transactions.stream().collect(
                 Collector.of(
                         HashMap::new,
-                        (a,b) -> a.put(a.size()+1, (float) b.getAmount()),
-                        (c,d) -> c
+                        (a, b) -> a.put(a.size() + 1, (float) b.getAmount()),
+                        (c, d) -> c
                 )
         );
-        Float averageAmount = map.entrySet().stream().reduce((a,b) -> {
-            a.setValue(a.getValue() - ((a.getValue() - b.getValue()) / (int) b.getKey()));
+        Float averageAmount = map.entrySet().stream().reduce((a, b) -> {
+            a.setValue(a.getValue() - ((a.getValue() - b.getValue()) / b.getKey()));
             return a;
         }).map(Map.Entry::getValue).orElse(null);
         System.out.println("\nFind the average transaction amount.");

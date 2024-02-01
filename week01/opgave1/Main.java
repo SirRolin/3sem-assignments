@@ -2,8 +2,6 @@ package week01.opgave1;
 
 import java.util.Arrays;
 
-import static java.lang.String.*;
-
 public class Main {
     public static void main(String[] args) {
         int a = 4;

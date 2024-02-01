@@ -3,9 +3,7 @@ package week01.opgave4;
 import week01.opgave3.Employee;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.function.*;
@@ -44,15 +42,8 @@ public class Main {
             float avg = 0;
             int count = 1;
             for (Employee emp: list) {
-                switch(count){
-                    case 1 -> {
-                        avg = emp.age;
-                    }
-                    default -> {
-                        //// an old formula I made to calculate average WITHOUT getting integer overflows even with millions of items in the list.
-                        avg += (emp.age - avg) / count;
-                    }
-                }
+                //// an old formula I made to calculate average WITHOUT getting integer overflows even with millions of items in the list.
+                avg += (emp.age - avg) / count;
                 count++;
             }
             return avg;
@@ -73,7 +64,7 @@ public class Main {
         //// prints all months out so we can see them grouped
         for (int i = 0; i < 12; i++) {
             getEmployeesAtMonth.andThen((e) -> {
-                if(e.size()>0)
+                if(!e.isEmpty())
                     System.out.println("employees in month: " + e.get(0).birthday.getMonth());
                 e.forEach(System.out::println);
                 return e.size();

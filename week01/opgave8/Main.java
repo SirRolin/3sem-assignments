@@ -1,7 +1,5 @@
 package week01.opgave8;
 
-import java.util.Objects;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -21,9 +19,9 @@ public class Main {
             errorCount++;
         }
 
-        DataStorage<String> stringy = new FileStorage<String>();
+        DataStorage<String> stringy = new FileStorage<>();
         String firstSource = stringy.store(first);
-        String firstAfterFileRetrieval = stringy.retrieve(firstSource).toString();
+        String firstAfterFileRetrieval = stringy.retrieve(firstSource);
         //// making sure that what we put in also is what comes out.
         if(!firstAfterFileRetrieval.equals(first)){
             System.out.println("FileStorage Returns wrong value.");
