@@ -1,0 +1,15 @@
+{
+  "firstName":"Fanny",
+  "lastName": "Manny",
+  "birthDate": "42-20-1962",
+  "address": {
+    "street": "St. Claus st.",
+    "city": "Favrholm",
+    "zipCode": 2
+  },
+  "account":{
+    "id": "2",
+    "balance": "2",
+    "isActive": true
+  }
+}

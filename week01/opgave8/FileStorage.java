@@ -1,5 +1,6 @@
 package week01.opgave8;
 
+import javax.xml.crypto.Data;
 import java.io.*;
 
 public class FileStorage<DataType extends java.io.Serializable> implements DataStorage<DataType> {
