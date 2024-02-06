@@ -8,25 +8,29 @@ import okhttp3.Response;
 import java.io.IOException;
 
 public class DTOMain{
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(MovieDTO.class, new MovieInstantiationer()).create();
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting()
+            .registerTypeAdapter(Movie[].class, new MovieDeserializer())
+            .create();
     public static void main(String[] args){
         OkHttpClient client = new OkHttpClient();
 
         Request request = FindaMovieWithKeyword("The Ministry of ungentlemanly Warfare");
 
         try {
-            Response response = client.newCall(request).execute();
-            assert response.body() != null;
-            String json = response.body().string();
+            String json;
+            try (Response response = client.newCall(request).execute()) {
+                assert response.body() != null;
+                json = response.body().string();
+            }
             System.out.println(json);
-            responseDTO obj = gson.fromJson(json, responseDTO.class);
-            System.out.println(obj.results[0]);
-            //System.out.println(((JsonArray) obj.get("results")).size());
+            MovieResponse obj = gson.fromJson(json, MovieResponse.class);
+            System.out.println(obj.results[0].title);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static Request FindaMovieWithKeyword(String keyword) {
         return new Request.Builder()
                 .url("https://api.themoviedb.org/3/search/movie?query=" + keyword + "&include_adult=false&language=en-US&page=1")

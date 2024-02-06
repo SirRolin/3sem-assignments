@@ -1,11 +1,9 @@
 package week02.DTO;
 
-import java.lang.reflect.Type;
 import java.time.LocalDate;
 
-import com.google.gson.*;
-
-public class MovieDTO {
+@SuppressWarnings("unused")
+public class Movie implements DTO{
     public String title;
     public String original_title;
     public String overview;
@@ -23,8 +21,9 @@ public class MovieDTO {
     transient String release_year;
     transient LocalDate release_dateLD;
 
-    protected void finalizeLoading() {
-        if(release_date!=null){
+    @Override
+    public void finalizeLoading() {
+        if(!release_date.isBlank()){
             release_year = release_date.split("-",2)[0];
             release_dateLD = LocalDate.parse(release_date);
         }
