@@ -3,8 +3,10 @@ package week01.opgave9;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class Task {
@@ -23,13 +25,9 @@ public class Task {
                 try {
                     new Task().run();
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e); //// it wouldn't run without a try catch here...
+                    throw new RuntimeException(e);
                 }
-            }).exceptionally((e) -> {
-                //noinspection ThrowablePrintedToSystemOut
-                System.out.println(e);
-                return null;
-            }));
+            }).exceptionally((e) -> null));
         }
         CompletableFuture<Void> allFutures = null;
         for (CompletableFuture<Void> com : completables) {
@@ -38,8 +36,29 @@ public class Task {
             else
                 allFutures = CompletableFuture.allOf(allFutures, com);
         }
-        if(allFutures != null)
-            allFutures.thenRun(() -> System.out.println("All Tasks Complete"));
+
+        //// Lambda to wait for all tasks to be done
+        Consumer<CompletableFuture<Void>> waitForTask = task -> {
+            if (task != null) {
+                task.thenRun(() -> System.out.println("All Tasks Complete"));
+                task.exceptionally((ex) -> null);
+                try {
+                    task.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        waitForTask.accept(allFutures);
+
+
+        /* //// Playing with exceptionally when it fails automatically.
+        allFutures = CompletableFuture.runAsync(Task::new, Runnable::run).exceptionally((ex) -> {
+            System.out.println(ex);
+            return null;
+        });
+
+        waitForTask.accept(allFutures);*/
 
 
         //// opgave 9.3

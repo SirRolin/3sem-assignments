@@ -9,7 +9,7 @@ public class MemoryStorage<DataType> implements DataStorage<DataType> {
     @Override
     public String store(DataType data) {
         String hash = String.valueOf(data.hashCode());
-        storedData.put(hash, data); //// For some reason the Parameter
+        storedData.put(hash, data);
         return hash;
     }
 
