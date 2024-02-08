@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Exercise6 {
@@ -24,56 +25,72 @@ public class Exercise6 {
         fetchList.add(new numbersDTO());
         fetchList.add(new dogDTO());
         //// You must dream about the 10th as that either costs money, requires a library of countries, names or more.
-        //// just getting 9 of these is a lot of work.
+        //// just getting 9 of these was a lot of work.
+        ScheduledExecutorService scheduledToBeReadded = Executors.newScheduledThreadPool(1);
 
         Runnable printRandomJoke = () -> {
             Random rng = new Random();
             int indexOfList = rng.nextInt(fetchList.size());
-            DTO dto = fetchList.get(indexOfList);
+            final DTO dto = fetchList.get(indexOfList);
 
-            //// I don't want the same link to spaceX 3-10 times.
-            synchronized (fetchList) {
-                if (dto.removeAfterRun() & fetchList.contains(dto))
+            //// I don't want the same link to spaceX 3-10 times. So it's limited to once per 50 seconds.
+            //// I do this by removing it from the list and creating a new thread which is delayed by 50 seconds, before it adds it back to the list.
+
+            if (dto.removeAfterRun() & fetchList.contains(dto)) {
+                synchronized (fetchList) {
                     fetchList.remove(dto);
+                }
+                scheduledToBeReadded.schedule(() -> {
+                    synchronized (fetchList) {
+                        fetchList.add(dto);
+                    }
+                }, 50L, TimeUnit.SECONDS);
             }
             System.out.println(dto.getClass().getSimpleName() + ": " + dto.convertJson(dto.fetchDTO())[0].getJoke());
         };
 
-        ExecutorService exe = Executors.newFixedThreadPool(5);
-        for (int i = 0; i < 20; i++) {
+        ExecutorService exe = Executors.newFixedThreadPool(1);
+        for (int i = 0; i < 50; i++) {
             exe.execute(printRandomJoke);
         }
         exe.shutdown();
         try {
             System.out.println("Terminated without problem? " + exe.awaitTermination(10L, TimeUnit.DAYS));
+            scheduledToBeReadded.shutdownNow().forEach(Runnable::run);
+            scheduledToBeReadded.awaitTermination(10L, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         System.out.println("Still in fetchList:");
         fetchList.forEach((x) -> System.out.println(x.getClass().getSimpleName()));
     }
+
     private static abstract class DTO {
         public static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
         public abstract DTO convertJson(JsonObject json);
+
         public abstract DTO[] convertJson(JsonArray json);
+
         public DTO[] convertJson(String json) {
             JsonElement element = gson.fromJson(json, JsonElement.class);
-            if(element.isJsonArray()){
+            if (element.isJsonArray()) {
                 return convertJson(element.getAsJsonArray());
-            }
-            else if (element.isJsonObject()) {
+            } else if (element.isJsonObject()) {
                 DTO[] result = new DTO[1];
                 result[0] = convertJson(element.getAsJsonObject());
                 return result;
             }
             return null;
         }
+
         public abstract String getJoke();
+
         public abstract String fetchDTO();
 
         //// Due to having done this in another exercise I suppress the warning.
         @SuppressWarnings("DuplicatedCode")
-        public String getJsonString(String url, Map<String, String> headersToAdd){
+        public String getJsonString(String url, Map<String, String> headersToAdd) {
             Request.Builder reqBuilder = new Request.Builder()
                     .url(url)
                     .get();
@@ -92,7 +109,7 @@ public class Exercise6 {
             }
         }
 
-        public boolean removeAfterRun(){
+        public boolean removeAfterRun() {
             return false;
         }
     }
@@ -102,6 +119,7 @@ public class Exercise6 {
         public DTO convertJson(JsonObject json) {
             return DTO.gson.fromJson(json, dadJokesDTO.class);
         }
+
         @Override
         public DTO[] convertJson(JsonArray json) {
             return DTO.gson.fromJson(json, dadJokesDTO[].class);
@@ -116,15 +134,17 @@ public class Exercise6 {
         public String fetchDTO() {
             return getJsonString("https://icanhazdadjoke.com/", Map.of("Accept", "application/json"));
         }
+
         public String joke;
 
     }
 
-    private static class chuckNorrisDTO extends DTO{
+    private static class chuckNorrisDTO extends DTO {
         @Override
         public DTO convertJson(JsonObject json) {
             return gson.fromJson(json, chuckNorrisDTO.class);
         }
+
         @Override
         public DTO[] convertJson(JsonArray json) {
             return DTO.gson.fromJson(json, chuckNorrisDTO[].class);
@@ -143,11 +163,12 @@ public class Exercise6 {
         String value;
     }
 
-    private static class kanyeDTO extends DTO{
+    private static class kanyeDTO extends DTO {
         @Override
         public DTO convertJson(JsonObject json) {
             return gson.fromJson(json, kanyeDTO.class);
         }
+
         @Override
         public DTO[] convertJson(JsonArray json) {
             return DTO.gson.fromJson(json, kanyeDTO[].class);
@@ -166,11 +187,12 @@ public class Exercise6 {
         String quote;
     }
 
-    private static class trumpDTO extends DTO{
+    private static class trumpDTO extends DTO {
         @Override
         public DTO convertJson(JsonObject json) {
             return gson.fromJson(json, trumpDTO.class);
         }
+
         @Override
         public DTO[] convertJson(JsonArray json) {
             return DTO.gson.fromJson(json, trumpDTO[].class);
@@ -189,11 +211,12 @@ public class Exercise6 {
         String message;
     }
 
-    private static class spaceXDTO extends DTO{
+    private static class spaceXDTO extends DTO {
         @Override
         public DTO convertJson(JsonObject json) {
             return gson.fromJson(json, spaceXDTO.class);
         }
+
         @Override
         public DTO[] convertJson(JsonArray json) {
             return DTO.gson.fromJson(json, spaceXDTO[].class);
@@ -208,19 +231,21 @@ public class Exercise6 {
         public String fetchDTO() {
             return getJsonString("https://api.spacexdata.com/v5/launches/latest", Map.of("Accept", "application/json"));
         }
+
         @Override
-        public boolean removeAfterRun(){
+        public boolean removeAfterRun() {
             return true;
         }
 
         JsonObject links;
     }
 
-    private static class pokemonDTO extends DTO{
+    private static class pokemonDTO extends DTO {
         @Override
         public DTO convertJson(JsonObject json) {
             return gson.fromJson(json, pokemonDTO.class);
         }
+
         @Override
         public DTO[] convertJson(JsonArray json) {
             return DTO.gson.fromJson(json, pokemonDTO[].class);
@@ -228,7 +253,7 @@ public class Exercise6 {
 
         @Override
         public String getJoke() {
-            if(name == null){
+            if (name == null) {
                 return results.getAsString();
             }
             StringBuilder sb = new StringBuilder();
@@ -237,11 +262,11 @@ public class Exercise6 {
                 JsonObject abilities = ja.get(i).getAsJsonObject();
                 JsonObject ability = abilities.get("ability").getAsJsonObject();
                 sb.append("\n\t");
-                if(abilities.has("slot"))
+                if (abilities.has("slot"))
                     sb.append(abilities.get("slot").getAsString()).append(": ");
                 else
                     sb.append("unknown: ");
-                if(ability.has("name"))
+                if (ability.has("name"))
                     sb.append(ability.get("name").getAsString()).append(".");
                 else
                     sb.append("unknown.");
@@ -256,9 +281,9 @@ public class Exercise6 {
             String firstJString = getJsonString("https://pokeapi.co/api/v2/pokemon/?offset=" + randomPokemonID + "&limit=1", Map.of());
             DTO jsonEle = convertJson(firstJString)[0];
             String second = null;
-            if(jsonEle instanceof pokemonDTO pDTO){
-                 second = getJsonString("https://pokeapi.co/api/v2/pokemon/" + pDTO.results.getAsJsonArray().get(0).getAsJsonObject().get("name").getAsString()
-                , Map.of());
+            if (jsonEle instanceof pokemonDTO pDTO) {
+                second = getJsonString("https://pokeapi.co/api/v2/pokemon/" + pDTO.results.getAsJsonArray().get(0).getAsJsonObject().get("name").getAsString()
+                        , Map.of());
             }
             return second;
         }
@@ -275,6 +300,7 @@ public class Exercise6 {
         public DTO convertJson(JsonObject json) {
             return DTO.gson.fromJson(json, boredDTO.class);
         }
+
         @Override
         public DTO[] convertJson(JsonArray json) {
             return DTO.gson.fromJson(json, boredDTO[].class);
@@ -289,6 +315,7 @@ public class Exercise6 {
         public String fetchDTO() {
             return getJsonString("https://www.boredapi.com/api/activity/", Map.of("Accept", "application/json"));
         }
+
         public String activity;
 
     }
@@ -298,6 +325,7 @@ public class Exercise6 {
         public DTO convertJson(JsonObject json) {
             return DTO.gson.fromJson(json, numbersDTO.class);
         }
+
         @Override
         public DTO[] convertJson(JsonArray json) {
             return DTO.gson.fromJson(json, numbersDTO[].class);
@@ -313,6 +341,7 @@ public class Exercise6 {
             //noinspection HttpUrlsUsage
             return getJsonString("http://numbersapi.com/random?json", Map.of("Accept", "application/json"));
         }
+
         public String text;
 
     }
@@ -322,6 +351,7 @@ public class Exercise6 {
         public DTO convertJson(JsonObject json) {
             return DTO.gson.fromJson(json, dogDTO.class);
         }
+
         @Override
         public DTO[] convertJson(JsonArray json) {
             return DTO.gson.fromJson(json, dogDTO[].class);
@@ -336,6 +366,7 @@ public class Exercise6 {
         public String fetchDTO() {
             return getJsonString("https://dog.ceo/api/breeds/image/random", Map.of("Accept", "application/json"));
         }
+
         public String message;
 
     }
