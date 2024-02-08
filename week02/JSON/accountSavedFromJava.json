@@ -1,0 +1,92 @@
+[
+  {
+    "firstName": "Fanny",
+    "lastName": "Manny",
+    "birthDate": "25-02-1962",
+    "address": {
+      "street": "St. Claus st.",
+      "city": "Favrholm",
+      "zipCode": 3101
+    },
+    "account": {
+      "id": "2",
+      "balance": "2",
+      "isActive": true
+    }
+  },
+  {
+    "firstName": "Hanne",
+    "lastName": "Sannesen",
+    "birthDate": "12-01-1965",
+    "address": {
+      "street": "St. Claus st.",
+      "city": "Favrholm",
+      "zipCode": 3101
+    },
+    "account": {
+      "id": "3",
+      "balance": "22",
+      "isActive": true
+    }
+  },
+  {
+    "firstName": "Goku",
+    "lastName": "",
+    "birthDate": "01-12-1990",
+    "address": {
+      "street": "Testvej1",
+      "city": "TestBy1",
+      "zipCode": 9999
+    },
+    "account": {
+      "id": "4",
+      "balance": "22225",
+      "isActive": false
+    }
+  },
+  {
+    "firstName": "TestNavn2",
+    "lastName": "TestEfterNavn2",
+    "birthDate": "26-05-1986",
+    "address": {
+      "street": "St. Claus st.",
+      "city": "Favrholm",
+      "zipCode": 3101
+    },
+    "account": {
+      "id": "1",
+      "balance": "-100",
+      "isActive": true
+    }
+  },
+  {
+    "firstName": "have",
+    "lastName": "has",
+    "birthDate": "11-07-1985",
+    "address": {
+      "street": "St. Claus st.",
+      "city": "Favrholm",
+      "zipCode": 2
+    },
+    "account": {
+      "id": "8",
+      "balance": "2",
+      "isActive": true
+    }
+  },
+  {
+    "firstName": "wes",
+    "lastName": "navbe",
+    "birthDate": "12-09-1951",
+    "address": {
+      "street": "St. Claus st.",
+      "city": "Favrholm",
+      "zipCode": 3101
+    },
+    "account": {
+      "id": "9",
+      "balance": "0",
+      "isActive": true
+    }
+  }
+]
