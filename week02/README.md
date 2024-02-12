@@ -2,9 +2,9 @@
 
 ## Overview
 
-- Your name
-- which assignment are included
-- which one are completed and which one are not
+- Nicolai Theis Rolin
+- DTO, JSON, THreads and Exercise 6
+- All
 
 ## Friday presentation
 - add the friday presentation into the weekly folder
