@@ -1,7 +1,6 @@
-package week03.unicorn;
+package week03.gls_tracking_system;
 
 import jakarta.persistence.EntityManagerFactory;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -10,7 +9,7 @@ import org.hibernate.service.ServiceRegistry;
 
 import java.util.Properties;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class HibernateConfig {
 
     private static EntityManagerFactory entityManagerFactory;
@@ -28,11 +27,12 @@ public class HibernateConfig {
             props.put("hibernate.format_sql", "true"); // format sql in console
             props.put("hibernate.use_sql_comments", "true"); // show sql comments in console
 
-            //props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect"); // dialect for postgresql
+            //props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect"); // dialect for postgresql - already default
             props.put("hibernate.connection.driver_class", "org.postgresql.Driver"); // driver class for postgresql
             props.put("hibernate.archive.autodetection", "class"); // hibernate scans for annotated classes
             props.put("hibernate.current_session_context_class", "thread"); // hibernate current session context
             props.put("hibernate.hbm2ddl.auto", "update"); // hibernate creates tables based on entities
+
 
 
             return getEntityManagerFactory(configuration, props);
@@ -54,7 +54,7 @@ public class HibernateConfig {
         return sf.unwrap(EntityManagerFactory.class);
     }
     private static void getAnnotationConfiguration(Configuration configuration) {
-        configuration.addAnnotatedClass(Unicorn.class);
+        configuration.addAnnotatedClass(Package.class);
     }
 
     public static EntityManagerFactory getEntityManagerFactoryConfig() {
