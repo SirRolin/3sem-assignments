@@ -57,6 +57,8 @@ public class Exercise6 {
         try {
             System.out.println("Terminated without problem? " + exe.awaitTermination(10L, TimeUnit.DAYS));
             scheduledToBeReadded.shutdownNow().forEach(Runnable::run);
+
+            //noinspection ResultOfMethodCallIgnored
             scheduledToBeReadded.awaitTermination(10L, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -65,7 +67,7 @@ public class Exercise6 {
         fetchList.forEach((x) -> System.out.println(x.getClass().getSimpleName()));
     }
 
-    private static abstract class DTO {
+    private static abstract class DTO{
         public static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         public abstract DTO convertJson(JsonObject json);
