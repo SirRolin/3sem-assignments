@@ -1,16 +1,19 @@
-package week03.gls_tracking_system;
+package week04.gls_tracking_system;
 
 import jakarta.persistence.NoResultException;
 import org.junit.jupiter.api.*;
+import week03.gls_tracking_system.Package;
+import week03.gls_tracking_system.PackageDAO;
+import week03.gls_tracking_system.Status;
 
 public class PackageDAOUnitTest {
-    private final static PackageDAO pDao = new PackageDAO();
-    private static Package staticPack;
-    private static Package packageToCleanUp;
+    private final static week03.gls_tracking_system.PackageDAO pDao = new PackageDAO();
+    private static week03.gls_tracking_system.Package staticPack;
+    private static week03.gls_tracking_system.Package packageToCleanUp;
 
     @BeforeAll
     public static void setupAll(){
-        staticPack = new Package();
+        staticPack = new week03.gls_tracking_system.Package();
         staticPack.setTrackingNumber(Integer.toString(staticPack.hashCode()));
         pDao.create(staticPack);
     }
@@ -27,16 +30,16 @@ public class PackageDAOUnitTest {
 
     @Test
     public void create(){
-        packageToCleanUp = new Package();
+        packageToCleanUp = new week03.gls_tracking_system.Package();
         packageToCleanUp.setTrackingNumber(Integer.toString(packageToCleanUp.hashCode()));
         packageToCleanUp.setDeliveryStatus(Status.DELIVERED);
         Assertions.assertDoesNotThrow(() -> pDao.create(packageToCleanUp));
-        Package failingPackage = new Package();
+        week03.gls_tracking_system.Package failingPackage = new week03.gls_tracking_system.Package();
         Assertions.assertDoesNotThrow(() -> pDao.create(failingPackage));
     }
     @Test
     public void findPackage() {
-        Package trackedPackage = pDao.findPackage(staticPack.getTrackingNumber());
+        week03.gls_tracking_system.Package trackedPackage = pDao.findPackage(staticPack.getTrackingNumber());
         Assertions.assertEquals(staticPack.getId(), trackedPackage.getId());
         Assertions.assertEquals(staticPack.getTrackingNumber(), trackedPackage.getTrackingNumber());
     }
@@ -48,7 +51,7 @@ public class PackageDAOUnitTest {
 
     @Test
     public void delete() {
-        Package localPack = new Package();
+        week03.gls_tracking_system.Package localPack = new Package();
         localPack.setTrackingNumber(Integer.toString(localPack.hashCode()));
         pDao.create(localPack);
         Assertions.assertNotNull(pDao.findPackage(localPack.getTrackingNumber()));
