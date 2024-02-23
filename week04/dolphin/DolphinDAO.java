@@ -2,14 +2,12 @@ package week04.dolphin;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.validation.ValidationException;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static week04.hibernate.HibernateConfig.getEntityManagerFactoryConfig;
 
@@ -82,7 +80,6 @@ public class DolphinDAO {
         // This method should retrieve all students from the database and return them as a list. Use a TypedQuery to retrieve all students.
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            @SuppressWarnings("unchecked")
             List<Person> found = em.createQuery("select distinct p from Person p", Person.class).getResultList();
             em.getTransaction().commit();
             return found;

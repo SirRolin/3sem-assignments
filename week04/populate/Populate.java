@@ -2,16 +2,14 @@ package week04.populate;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import week04.populate.model.Student;
 
 import static week04.populate.config.HibernateConfig.getEntityManagerFactoryConfig;
 
 public class Populate {
     public static void main(String[] args) {
         EntityManagerFactory emf = getEntityManagerFactoryConfig(); // statically imported above.
-        EntityManager em = emf.createEntityManager();
 
-        try {
+        try(EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             // populate the database with data
             em.createNativeQuery("""
@@ -57,8 +55,6 @@ public class Populate {
                         (4, 2),
                         (5, 3)""").executeUpdate();
             em.getTransaction().commit();
-        } finally {
-            em.close();
         }
     }
 }
