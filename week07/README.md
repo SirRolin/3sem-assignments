@@ -2,9 +2,6 @@
 
 ## Overview
 
-- Your name
-- which assignment are included
-- which one are completed and which one are not
-
-## Friday presentation
-- add the friday presentation into the weekly folder
+- Nicolai Theis Rolin
+- part 1, part 1, part 2
+- part 1, part 1, part 2

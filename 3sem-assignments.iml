@@ -49,5 +49,6 @@
     <orderEntry type="library" name="postgresql" level="project" />
     <orderEntry type="library" name="projectlombok.lombok" level="project" />
     <orderEntry type="library" name="hibernate.validator" level="project" />
+    <orderEntry type="library" name="io.javalin" level="project" />
   </component>
 </module>
