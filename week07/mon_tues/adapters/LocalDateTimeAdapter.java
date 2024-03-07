@@ -1,4 +1,4 @@
-package week07.adapters;
+package week07.mon_tues.adapters;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -15,7 +15,13 @@ public class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
             jsonWriter.nullValue();
             return;
         }
-        String output = String.format("%s:%s:%s-%s/%s-%s", localDateTime.getSecond(), localDateTime.getMonthValue(), localDateTime.getYear(), localDateTime.getDayOfMonth(), localDateTime.getMonthValue(), localDateTime.getYear());
+        String output = String.format("%s:%s:%s-%s/%s-%s",
+                localDateTime.getSecond(),
+                localDateTime.getMonthValue(),
+                localDateTime.getYear(),
+                localDateTime.getDayOfMonth(),
+                localDateTime.getMonthValue(),
+                localDateTime.getYear());
         jsonWriter.value(output);
     }
 
@@ -26,10 +32,10 @@ public class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
             return null;
         }
         String input = jsonReader.nextString();
-        int year = Integer.parseInt(input.split("-")[2]);
-        int month = Integer.parseInt(input.split("-")[1].split("/")[1]);
-        int day = Integer.parseInt(input.split("-")[1].split("/")[0]);
-        int hour = Integer.parseInt(input.split("-")[0].split(":")[2]);
+        int year   = Integer.parseInt(input.split("-")[2]);
+        int month  = Integer.parseInt(input.split("-")[1].split("/")[1]);
+        int day    = Integer.parseInt(input.split("-")[1].split("/")[0]);
+        int hour   = Integer.parseInt(input.split("-")[0].split(":")[2]);
         int minute = Integer.parseInt(input.split("-")[0].split(":")[1]);
         int second = Integer.parseInt(input.split("-")[0].split(":")[0]);
 

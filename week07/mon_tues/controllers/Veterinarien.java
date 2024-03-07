@@ -1,12 +1,11 @@
-package week07.controllers;
+package week07.mon_tues.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import net.bytebuddy.asm.Advice;
-import week07.DTO.AppointmentDTO;
-import week07.adapters.LocalDateTimeAdapter;
+import week07.mon_tues.DTO.AppointmentDTO;
+import week07.mon_tues.adapters.LocalDateTimeAdapter;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -17,7 +16,7 @@ public class Veterinarien {
     private static final Gson g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).setPrettyPrinting().create();
 
     public static void setup(Javalin webApp) {
-        webApp.get("/vet/appointments", Veterinarien::getFutureAppointments);
+        webApp.get("/api/vet/appointments", Veterinarien::getFutureAppointments);
         webApp.get("/api/vet/appointment/{id}", Veterinarien::getAppointmentByIdApi);
         webApp.get("/api/vet/patients/{id}", Veterinarien::getPatientByIdApi);
         webApp.get("/api/vet/medicals/{id}", Veterinarien::getMedicalsByIdApi);

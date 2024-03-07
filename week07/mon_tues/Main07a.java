@@ -1,10 +1,10 @@
-package week07;
+package week07.mon_tues;
 
 import io.javalin.Javalin;
-import week07.controllers.DogController;
-import week07.controllers.Veterinarien;
+import week07.mon_tues.controllers.DogController;
+import week07.mon_tues.controllers.Veterinarien;
 
-public class week07_javalin {
+public class Main07a {
     public static void main(String[] args) {
         io.javalin.Javalin webApp = Javalin.create();
 

@@ -1,11 +1,11 @@
-package week07.controllers;
+package week07.mon_tues.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.jetbrains.annotations.Nullable;
-import week07.DTO.DogDTO;
+import week07.mon_tues.DTO.DogDTO;
 
 import java.util.HashMap;
 import java.util.Set;

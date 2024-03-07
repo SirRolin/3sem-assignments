@@ -1,4 +1,4 @@
-package week07.DTO;
+package week07.mon_tues.DTO;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
