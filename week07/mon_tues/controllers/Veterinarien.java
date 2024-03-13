@@ -3,12 +3,15 @@ package week07.mon_tues.controllers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.javalin.Javalin;
+import io.javalin.apibuilder.EndpointGroup;
 import io.javalin.http.Context;
 import week07.mon_tues.DTO.AppointmentDTO;
 import week07.mon_tues.adapters.LocalDateTimeAdapter;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+
+import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Veterinarien {
     private static final HashMap<Integer, AppointmentDTO> appointments = new HashMap<>();
@@ -27,7 +30,24 @@ public class Veterinarien {
         webApp.after("/api/vet/*", ctx -> {
             ctx.contentType("json");
         });
+    }
 
+    public static EndpointGroup getEndpoints(){
+        return () -> {
+            path("/api/vet", () -> {
+                get("/api/vet/appointments", Veterinarien::getFutureAppointments);
+                get("/api/vet/appointment/{id}", Veterinarien::getAppointmentByIdApi);
+                get("/api/vet/patients/{id}", Veterinarien::getPatientByIdApi);
+                get("/api/vet/medicals/{id}", Veterinarien::getMedicalsByIdApi);
+                get("/api/vet/all", Veterinarien::getAllAppointmentsApi);
+                before("/api/vet/*", ctx -> {
+                    System.out.println(LocalDateTime.now() + ": API was called on path: " + ctx.path());
+                });
+                after("/api/vet/*", ctx -> {
+                    ctx.contentType("json");
+                });
+            });
+        };
     }
 
     private static void getFutureAppointmentsApi(Context ctx) {
