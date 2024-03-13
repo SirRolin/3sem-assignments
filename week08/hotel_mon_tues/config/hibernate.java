@@ -1,8 +1,8 @@
-package week07.wed_thur.config;
+package week08.hotel_mon_tues.config;
 
 import jakarta.persistence.EntityManagerFactory;
-import week07.wed_thur.model.Hotel;
-import week07.wed_thur.model.Room;
+import week08.hotel_mon_tues.model.Hotel;
+import week08.hotel_mon_tues.model.Room;
 
 import java.util.Set;
 
@@ -17,6 +17,6 @@ public class hibernate {
         {
             schema = "dev";
         }
-        return myLibrary.hibernate.factory.getEntityManagerFactory(classes, 5432, db, schema);
+        return myLibrary.hibernate.factory.getEntityManagerFactory(classes, 5432, db, schema, isDevState);
     }
 }

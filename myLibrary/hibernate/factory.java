@@ -12,13 +12,12 @@ import java.util.Properties;
 import java.util.Set;
 
 
-@SuppressWarnings("rawtypes")
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class factory {
 
-    private static final HashMap<Set<Class>, EntityManagerFactory> entityManagerFactories = new HashMap<>();
+    private static final HashMap<Set<Class<?>>, EntityManagerFactory> entityManagerFactories = new HashMap<>();
 
-    private static EntityManagerFactory buildEntityFactoryConfig(Set<Class> classes, Integer port, String db, String schema) {
+    private static EntityManagerFactory buildEntityFactoryConfig(Set<Class<?>> classes, Integer port, String db, String schema, boolean resetDB) {
         try {
             Configuration configuration = new Configuration();
 
@@ -28,7 +27,9 @@ public class factory {
             Properties props = new Properties();
 
             props.put("hibernate.connection.url", "jdbc:postgresql://localhost:" + port + "/" + db + "?currentSchema=" + schema);
-            props.put("hibernate.hbm2ddl.auto", "create");
+            //// create creates a new every time you connect.
+            //// update creates only new once and otherwise uses the data that's up
+            props.put("hibernate.hbm2ddl.auto", resetDB ? "create" : "update");
             props.put("hibernate.connection.username", "postgres");
             props.put("hibernate.connection.password", "postgres");
             props.put("hibernate.show_sql", "true"); // show sql in console
@@ -60,10 +61,13 @@ public class factory {
         SessionFactory sf = configuration.buildSessionFactory(serviceRegistry);
         return sf.unwrap(EntityManagerFactory.class);
     }
+    public static EntityManagerFactory getEntityManagerFactory(Set<Class<?>> classes, Integer port, String db, String schema) {
+        return getEntityManagerFactory(classes, port, db, schema, false);
+    }
 
-    public static EntityManagerFactory getEntityManagerFactory(Set<Class> classes, Integer port, String db, String schema) {
+    public static EntityManagerFactory getEntityManagerFactory(Set<Class<?>> classes, Integer port, String db, String schema, boolean resetDB) {
         if (!entityManagerFactories.containsKey(classes) || !entityManagerFactories.get(classes).isOpen()) {
-            EntityManagerFactory emf = buildEntityFactoryConfig(classes, port, db, schema);
+            EntityManagerFactory emf = buildEntityFactoryConfig(classes, port, db, schema, resetDB);
             entityManagerFactories.remove(classes);
             entityManagerFactories.put(classes, emf);
         }

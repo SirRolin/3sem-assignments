@@ -50,5 +50,7 @@
     <orderEntry type="library" name="projectlombok.lombok" level="project" />
     <orderEntry type="library" name="hibernate.validator" level="project" />
     <orderEntry type="library" name="io.javalin" level="project" />
+    <orderEntry type="library" name="hamcrest" level="project" />
+    <orderEntry type="library" name="io.rest.assured" level="project" />
   </component>
 </module>
