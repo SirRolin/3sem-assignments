@@ -7,7 +7,7 @@ import week08.hotel_mon_tues.model.Room;
 import java.util.Set;
 
 public class hibernate {
-    //// I am not Going to repeat ALL the code for a 5th time, I made it dynamic.
+    //// I am not Going to repeat ALL the code for a 6th time, I made it dynamic.
     private static final Set<Class<?>> classes = Set.of(Hotel.class, Room.class);
     public static boolean isDevState = false;
     public static EntityManagerFactory getEntityManagerFactoryConfig(){
