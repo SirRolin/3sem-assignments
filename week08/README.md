@@ -2,7 +2,7 @@
 
 ## Overview
 
-- Nicolai Theis Rolib
+- Nicolai Theis Rolin
 - which assignment are included
     - Monday/Tuesday
         - Part I
