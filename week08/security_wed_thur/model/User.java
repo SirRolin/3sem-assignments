@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ public class User implements ISecurityUser {
                 @JoinColumn(name = "role_id", referencedColumnName = "role")
             }
     )
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     public User(String username, String password) {
         this.username = username;

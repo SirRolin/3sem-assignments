@@ -2,6 +2,7 @@ package week08.security_wed_thur.utils;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import week08.security_wed_thur.DAO.UserDAO;
@@ -10,6 +11,7 @@ import week08.security_wed_thur.Exceptions.ApiException;
 import week08.security_wed_thur.Exceptions.NotAuthorizedException;
 import week08.security_wed_thur.model.User;
 
+import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.NoSuchElementException;
@@ -52,8 +54,8 @@ public class TokenUtils {
     }
 
     public static boolean tokenIsValid(String token, String secret) throws ParseException, NotAuthorizedException, KeyLengthException {
-        JWTClaimsSet claimsSet = JWTClaimsSet.parse(token);
-        return true;
+        JWTClaimsSet claimsSet = SignedJWT.parse(token).getJWTClaimsSet();
+        return claimsSet.getIssuer() != null && claimsSet.getIssuer().equals(secret); // I don't know what else to verify it with.
     }
 
     public static UserDTO getUserWithRolesFromToken(String token) {

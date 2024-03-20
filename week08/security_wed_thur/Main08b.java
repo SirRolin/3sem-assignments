@@ -1,8 +1,8 @@
 package week08.security_wed_thur;
 
 import io.javalin.Javalin;
-import io.javalin.apibuilder.EndpointGroup;
-import week08.security_wed_thur.controller.SecurityController;
+import io.javalin.json.JavalinJackson;
+import week08.hotel_mon_tues.config.gsonFactory;
 import week08.security_wed_thur.controller.UserC;
 
 public class Main08b {
@@ -15,9 +15,8 @@ public class Main08b {
         webApp = Javalin.create(javalinConfig -> {
             javalinConfig.http.defaultContentType = "application/json";
             javalinConfig.router.contextPath = "/api";
-            //javalinConfig.plugins.enableDevLogging(); //// ?
             javalinConfig.bundledPlugins.enableDevLogging();
-            javalinConfig.router.apiBuilder(UserC.getRoutes()); // this works but the app.routes doesn't
+            javalinConfig.router.apiBuilder(UserC.getRoutes());
         });
 
 

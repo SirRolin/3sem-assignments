@@ -54,5 +54,6 @@
     <orderEntry type="library" name="io.rest.assured" level="project" />
     <orderEntry type="library" name="mindrot.jbcrypt" level="project" />
     <orderEntry type="library" name="nimbusds.nimbus.jose.jwt" level="project" />
+    <orderEntry type="library" name="fasterxml.jackson.core.databind" level="project" />
   </component>
 </module>
