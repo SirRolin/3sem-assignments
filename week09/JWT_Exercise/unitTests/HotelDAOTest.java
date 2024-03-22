@@ -38,7 +38,10 @@ class HotelDAOTest {
     @DisplayName("Get All Hotels")
     void getAll() {
         List<Hotel> hotels = hotelDAO.getAll();
-        assertTrue(hotels.contains(selectHotel));
+        assertTrue(hotels.stream().anyMatch(x ->
+                x.getID().equals(selectHotel.getID())
+                && x.getName().equals(selectHotel.getName())
+        ));
     }
 
     @Test

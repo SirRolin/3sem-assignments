@@ -5,10 +5,11 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.validation.ValidationException;
 import org.hibernate.Hibernate;
 import org.jetbrains.annotations.Nullable;
+import week09.JWT_Exercise.controller.UserC;
 import week09.JWT_Exercise.model.Role;
 import week09.JWT_Exercise.model.User;
 
-import static week09.security_wed_thur.config.hibernate.getEntityManagerFactoryConfig;
+import static week09.JWT_Exercise.config.hibernate.getEntityManagerFactoryConfig;
 
 public class UserDAO implements ISecurityDAO {
     private static EntityManagerFactory emf;
@@ -37,29 +38,34 @@ public class UserDAO implements ISecurityDAO {
     @Override
     @Nullable
     public User createUser(String username, String password) {
-        try(EntityManager em = emf.createEntityManager()){
+        try (EntityManager em = emf.createEntityManager()) {
             //// if there's already a user with that username return null
-            if(em.find(User.class, username) != null){
+            if (em.find(User.class, username) != null) {
                 return null;
             }
             User user = new User(username, password); //// Construct hashes the password
+            user.addRole(createRole(UserC.Role.USER.toString()));
+            em.getTransaction().begin();
             em.persist(user);
+            em.getTransaction().commit();
             return user;
         }
     }
 
     @Override
-    @Nullable
     public Role createRole(String role) {
         try(EntityManager em = emf.createEntityManager()){
-            //// if there's no user with that username
-            if(em.find(Role.class, role) != null){
-                return null;
+            Role result = em.find(Role.class, role);
+            //// if there's no Role with that name make a new one
+            if(result == null) {
+                result = new Role();
+                result.setRole(role);
+                em.getTransaction().begin();
+                em.persist(result);
+                em.getTransaction().commit();
             }
-            Role newRole = new Role();
-            newRole.setRole(role);
-            em.persist(newRole);
-            return newRole;
+            //// otherwise give that role
+            return result;
         }
     }
 
@@ -77,6 +83,9 @@ public class UserDAO implements ISecurityDAO {
             Role theRole = em.find(Role.class, role);
             if(user != null && theRole != null){
                 user.addRole(theRole);
+                em.getTransaction().begin();
+                em.merge(user);
+                em.getTransaction().commit();
             }
             return user;
         }

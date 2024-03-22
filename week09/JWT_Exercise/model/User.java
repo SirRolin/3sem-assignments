@@ -26,7 +26,8 @@ public class User implements ISecurityUser {
             },
             inverseJoinColumns = {
                 @JoinColumn(name = "role_id", referencedColumnName = "role")
-            }
+            },
+            uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"})
     )
     private Set<Role> roles = new HashSet<>();
 
@@ -40,9 +41,14 @@ public class User implements ISecurityUser {
         return roles.stream().map(Role::getRole).collect(Collectors.toSet());
     }
 
+    /**
+     * Verify a hashed password
+     * @param pw
+     * @return
+     */
     @Override
     public boolean verifyPassword(String pw) {
-        return BCrypt.checkpw(pw, hashedPassword);
+        return BCrypt.checkpw(pw,hashedPassword);
     }
 
     @Override

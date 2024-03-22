@@ -3,7 +3,8 @@ package week09.JWT_Exercise.utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.Getter;
-import week09.security_wed_thur.config.gsonFactory;
+
+import static week09.JWT_Exercise.config.gsonFactory.getGson;
 
 @Getter
 public class myJsonObject {
@@ -11,7 +12,7 @@ public class myJsonObject {
 
     @Override
     public String toString(){
-        return gsonFactory.getGson().toJson(obj);
+        return getGson().toJson(obj);
     }
     public myJsonObject put(String field, JsonElement value){
         obj.add(field, value);

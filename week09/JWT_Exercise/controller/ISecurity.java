@@ -2,7 +2,7 @@ package week09.JWT_Exercise.controller;
 
 import com.nimbusds.jose.JOSEException;
 import io.javalin.http.Handler;
-import net.minidev.json.parser.ParseException;
+import java.text.ParseException;
 import week09.JWT_Exercise.DTO.UserDTO;
 import week09.JWT_Exercise.Exceptions.NotAuthorizedException;
 

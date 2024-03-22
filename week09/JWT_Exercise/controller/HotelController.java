@@ -1,5 +1,6 @@
 package week09.JWT_Exercise.controller;
 
+import io.javalin.apibuilder.EndpointGroup;
 import week09.JWT_Exercise.config.gsonFactory;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -10,22 +11,31 @@ import com.google.gson.*;
 
 import java.util.List;
 
+import static io.javalin.apibuilder.ApiBuilder.*;
+
 public class HotelController {
     static HotelDAO dao = new HotelDAO();
     static Gson gson = gsonFactory.getGson();
-    public static void setup(Javalin webApp) {
-        webApp.get("/api/hotel", HotelController::getAllHotels);
-        webApp.get("/api/hotel/{id}", HotelController::getSpecificHotel);
-        webApp.get("/api/hotel/{id}/rooms", HotelController::getSpecificHotelsRooms);
-        webApp.post("/api/hotel", HotelController::postHotel);
-        webApp.put("/api/hotel/{id}", HotelController::putHotel);
-        webApp.delete("/api/hotel/{id}", HotelController::deleteHotel);
-    }
+
+    public static final EndpointGroup routes = () -> {
+        path("/hotel", () -> {
+            before(SecurityController.authenticate);
+            get("", HotelController::getAllHotels, UserC.Role.USER);
+            get("/{id}", HotelController::getSpecificHotel, UserC.Role.USER);
+            get("/{id}/rooms", HotelController::getSpecificHotelsRooms, UserC.Role.USER);
+            post("", HotelController::postHotel, UserC.Role.USER);
+            put("/{id}", HotelController::putHotel, UserC.Role.USER);
+            delete("/{id}", HotelController::deleteHotel, UserC.Role.USER);
+            after(ctx -> {
+               ctx.header("path", ctx.fullUrl());
+            });
+        });
+    };
 
 
     private static void getAllHotels(Context context) {
-        List<Hotel> hotels =  dao.getAll();
-        if(!hotels.isEmpty()) {
+        List<Hotel> hotels = dao.getAll();
+        if (!hotels.isEmpty()) {
             context.status(200);
             context.contentType("application/json");
             String result;
@@ -40,7 +50,7 @@ public class HotelController {
         Long id = getId(context);
         if (id == null) return;
         Hotel hotel = dao.getById(id);
-        if(hotel != null) {
+        if (hotel != null) {
             context.status(200);
             context.contentType("application/json");
             context.result(gson.toJson(hotel));
@@ -48,11 +58,12 @@ public class HotelController {
             context.status(204); //// No Content
         }
     }
+
     private static void getSpecificHotelsRooms(Context context) {
         Long id = getId(context);
         if (id == null) return;
         Hotel hotel = dao.getById(id);
-        if(hotel != null) {
+        if (hotel != null) {
             context.status(200);
             context.contentType("application/json");
             context.result(gson.toJson(hotel));
@@ -65,7 +76,7 @@ public class HotelController {
         String json = ctx.body();
         Hotel hotelFromJson = gson.fromJson(json, Hotel.class);
         dao.create(hotelFromJson);
-        if(hotelFromJson.getID() != null){
+        if (hotelFromJson.getID() != null) {
             ctx.status(202);
             ctx.contentType("application/json");
             ctx.result(gson.toJson(hotelFromJson));
@@ -78,7 +89,7 @@ public class HotelController {
         Long id = getId(context);
         if (id == null) return;
         Hotel hotel = dao.getById(id);
-        if(hotel == null){
+        if (hotel == null) {
             context.status(404);
             return;
         }
@@ -95,7 +106,7 @@ public class HotelController {
         Long id = getId(context);
         if (id == null) return;
         Hotel hotel = dao.getById(id);
-        if(hotel != null) {
+        if (hotel != null) {
             dao.delete(hotel);
             context.status(204);
         } else {
@@ -107,10 +118,10 @@ public class HotelController {
     private static Long getId(Context context) {
         String idStr = context.pathParam("id");
         Long id = null;
-        try{
-            if(idStr == null) return null;
+        try {
+            if (idStr == null) return null;
             id = Long.parseLong(idStr);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             context.status(400);
             return null;

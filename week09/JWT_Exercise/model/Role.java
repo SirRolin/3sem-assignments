@@ -1,14 +1,12 @@
 package week09.JWT_Exercise.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Setter
@@ -18,9 +16,9 @@ import java.util.Set;
 public class Role {
     @Id
     private String role;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "roles")
     @Setter(AccessLevel.NONE)
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
     public Role addUser(User u){
         users.add(u);
         if(!u.getRoles().contains(this)){

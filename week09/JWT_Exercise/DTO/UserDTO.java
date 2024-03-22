@@ -1,5 +1,6 @@
 package week09.JWT_Exercise.DTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,13 +14,12 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
     private String username;
-    private String password;
     private Set<String> roles = new HashSet<>();
     public UserDTO(User user){
         username = user.getUsername();
-        password = user.getHashedPassword();
         roles = user.getRoles().stream().map(Role::getRole).collect(Collectors.toSet());
     }
 }

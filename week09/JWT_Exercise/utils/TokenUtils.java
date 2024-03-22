@@ -2,6 +2,7 @@ package week09.JWT_Exercise.utils;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import week09.JWT_Exercise.DAO.concrete.UserDAO;
@@ -11,20 +12,22 @@ import week09.JWT_Exercise.Exceptions.NotAuthorizedException;
 import week09.JWT_Exercise.model.User;
 
 import java.text.ParseException;
-import java.util.Date;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class TokenUtils {
 
     public static String createToken(UserDTO user, String issuer, String token_expire_time, String secret_key) throws ApiException {
         try {
+            String roleString = user.getRoles().size() == 0 ? "" :  user.getRoles().stream().reduce((s1, s2) -> s1 + "," + s2).get();
+
             JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                     .subject(user.getUsername())
                     .issuer(issuer)
                     .claim("username", user.getUsername())
-                    .claim("roles", user.getRoles().stream().reduce((s1, s2) -> s1 + "," + s2).get())
+                    .claim("roles", roleString)
                     .expirationTime(new Date(new Date().getTime() + Integer.parseInt(token_expire_time)))
                     .build();
+
             Payload payload = new Payload(claimsSet.toJSONObject());
 
             JWSSigner signer = new MACSigner(secret_key);
@@ -51,23 +54,24 @@ public class TokenUtils {
         return (int) (jwt.getJWTClaimsSet().getExpirationTime().getTime() - new Date().getTime());
     }
 
-    public static boolean tokenIsValid(String token, String secret) throws ParseException, NotAuthorizedException, KeyLengthException {
-        JWTClaimsSet claimsSet = SignedJWT.parse(token).getJWTClaimsSet();
-        return claimsSet.getIssuer() != null && claimsSet.getIssuer().equals(secret); // I don't know what else to verify it with.
+    public static boolean tokenIsValid(String token, String secret) throws ParseException, NotAuthorizedException, JOSEException {
+        SignedJWT jwt = SignedJWT.parse(token);
+        if (jwt.verify(new MACVerifier(secret)))
+        {
+            return true;
+        }
+        else
+        {
+            throw new NotAuthorizedException(403, "Token is not valid");
+        }
     }
 
     public static UserDTO getUserWithRolesFromToken(String token) {
         try {
-            JWTClaimsSet claims = JWTClaimsSet.parse(token);
-            String user = claims.getStringClaim("user");
-            String pass = claims.getStringClaim("password");
-            UserDAO dao = new UserDAO();
-            User userEntity = dao.getVerifiedUser(user, pass);
-            UserDTO dto = new UserDTO();
-            dto.setUsername(userEntity.getUsername());
-            dto.setPassword(userEntity.getHashedPassword());
-            dto.setRoles(userEntity.getRolesAsStrings());
-            return dto;
+            JWTClaimsSet claims = SignedJWT.parse(token).getJWTClaimsSet();
+            String user = claims.getStringClaim("username");
+            String roles = claims.getStringClaim("roles");
+            return new UserDTO(user, Set.of(roles.split(",")));
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

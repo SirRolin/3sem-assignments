@@ -1,18 +1,23 @@
 package week09.JWT_Exercise.controller;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.SignedJWT;
 import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
 import lombok.Getter;
-import net.minidev.json.parser.ParseException;
+
+import java.sql.Time;
+import java.text.ParseException;
 import week09.JWT_Exercise.DTO.UserDTO;
 import week09.JWT_Exercise.Exceptions.ApiException;
 import week09.JWT_Exercise.Exceptions.NotAuthorizedException;
-import week09.security_wed_thur.config.gsonFactory;
+import week09.JWT_Exercise.config.gsonFactory;
 import week09.JWT_Exercise.utils.TokenUtils;
 import week09.JWT_Exercise.utils.myJsonObject;
 import week09.JWT_Exercise.utils.secretKey;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,7 +47,7 @@ public class SecurityController implements ISecurity {
             secret_key = System.getenv("SECRET_KEY");
         } else {
             issuer = "Nicolai R";
-            token_expire_time = "3000000";
+            token_expire_time = "30000000";
             secret_key = SECRET_KEY_STRING;
         }
         return TokenUtils.createToken(user, issuer, token_expire_time, secret_key);
@@ -50,6 +55,8 @@ public class SecurityController implements ISecurity {
 
     @Override
     public boolean authorize(UserDTO user, Set<String> allowedRoles) {
+        if(allowedRoles.contains(UserC.Role.ANYONE.toString()))
+            return true;
         for(String s: allowedRoles){
             if(user.getRoles().contains(s)){
                 return true;
@@ -66,7 +73,6 @@ public class SecurityController implements ISecurity {
     public static void main(String[] args) {
         UserDTO testDTO = new UserDTO();
         testDTO.setUsername("Test");
-        testDTO.setPassword("IkkeGodt");
         Set<String> roles = new HashSet<>();
         roles.add("USER");
         testDTO.setRoles(roles);
@@ -80,6 +86,9 @@ public class SecurityController implements ISecurity {
         //// options return
         if (ctx.method().toString().equals("OPTIONS")) {
             ctx.status(200);
+            return;
+        }
+        if(ctx.routeRoles().contains(UserC.Role.ANYONE)){
             return;
         }
         myJsonObject returnObject = new myJsonObject(); //// my own as I am using Gson and I thought it faster to code things myself than recode everything to be jackson
@@ -99,6 +108,11 @@ public class SecurityController implements ISecurity {
         UserDTO verifiedTokenUser = sc.verifyToken(token);
         if (verifiedTokenUser == null) {
             returnObject.put("msg", "Invalid User or Token");
+            ctx.status(HttpStatus.FORBIDDEN).json(returnObject);
+            return;
+        }
+        if(!ctx.routeRoles().isEmpty() && ctx.routeRoles().stream().noneMatch(x -> verifiedTokenUser.getRoles().contains(x.toString()))){
+            returnObject.put("msg", "You don't have access to this part of the website");
             ctx.status(HttpStatus.FORBIDDEN).json(returnObject);
             return;
         }
@@ -123,12 +137,23 @@ public class SecurityController implements ISecurity {
 
     @Override
     public boolean tokenIsValid(String token, String secret) throws ParseException, JOSEException, NotAuthorizedException {
+        try {
+            SignedJWT jwt = SignedJWT.parse(token);
+            jwt.verify(new MACVerifier(secret));
+        } catch (java.text.ParseException e) {
+            throw new RuntimeException(e);
+        }
         return false;
     }
 
     @Override
     public boolean tokenNotExpired(String token) throws ParseException, NotAuthorizedException {
-        return false;
+        try {
+            SignedJWT jwt = SignedJWT.parse(token);
+            return jwt.getJWTClaimsSet().getExpirationTime().after(new Date());
+        } catch (java.text.ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
