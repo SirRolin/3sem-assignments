@@ -2,9 +2,14 @@
 
 ## Overview
 
-- Your name
-- which assignment are included
-- which one are completed and which one are not
-
-## Friday presentation
-- add the friday presentation into the weekly folder
+- Nicolai Theis Rolin
+- Exercises Included:
+  - mon_tues
+    - part 1 - Quiz, part 1 - Dog, part 2 - Veterinarian
+  - wed_thur
+    - part 2 - Exercise 2
+- Exercises Done:
+  - mon_tues
+    - part 1 - Quiz, part 1 - Dog, part 2 - Veterinarian
+  - wed_thur
+    - part 2 - Exercise 2

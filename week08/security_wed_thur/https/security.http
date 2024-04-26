@@ -1,0 +1,11 @@
+POST http://localhost:7070/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "blaabaer",
+  "password": "gasgasgas"
+}
+###
+GET http://localhost:7070/api/protected/user_demo
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUZXN0Iiwicm9sZXMiOiJVU0VSIiwiaXNzIjoiTmljb2xhaSBSIiwiZXhwIjoxNzEwOTQxODY1LCJ1c2VybmFtZSI6IlRlc3QifQ.Mqc0oThCdqa_qAL5fy2zWV4wmgQwgDYgQrpmOWdc5Jo
+###

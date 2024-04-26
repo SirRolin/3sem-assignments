@@ -5,7 +5,7 @@ import java.io.*;
 public class FileStorage<DataType extends java.io.Serializable> implements DataStorage<DataType> {
     @Override
     public String store(DataType data) {
-        String hash = data.getClass().toString().replace(".", "-") + "-" + data.hashCode();
+        String hash = data.getClass().toString().replace(".", "-") + data.hashCode() + ".je";
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(hash))) {
             oos.writeObject(data);
             return hash;
@@ -29,6 +29,7 @@ public class FileStorage<DataType extends java.io.Serializable> implements DataS
     @Override
     public void delete(String source) {
         File fileToDelete = new File(source);
+        @SuppressWarnings("unused")
         boolean deleted = fileToDelete.delete();
     }
 }

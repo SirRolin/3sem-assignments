@@ -1,0 +1,35 @@
+### Create New
+POST http://localhost:7070/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "blaabaer2",
+  "password": "gasgasgas"
+}
+### User Login
+POST http://localhost:7070/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "blaabaer",
+  "password": "gasgasgas"
+}
+
+### Visit Site while Logged in (token needs to be updated per application run)
+GET http://localhost:7070/api/protected/user_demo
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJibGFhYmFlciIsInJvbGVzIjoiVVNFUiIsImlzcyI6Ik5pY29sYWkgUiIsImV4cCI6MTcxMTA2MTE4OSwidXNlcm5hbWUiOiJibGFhYmFlciJ9.vn0oOVCaYhK8UD6UOSVsHFviEydCwUEQtkfWwdLF4hQ
+
+### Admin Login
+POST http://localhost:7070/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "blaabaer2",
+  "password": "gasgasgas"
+}
+### Visit Admin Site while Logged in as admin (token needs to be updated per application run)
+
+GET http://localhost:7070/api/protected/admin_demo
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJibGFhYmFlcjIiLCJyb2xlcyI6IkFETUlOLFVTRVIiLCJpc3MiOiJOaWNvbGFpIFIiLCJleHAiOjE3MTEwOTk5MjUsInVzZXJuYW1lIjoiYmxhYWJhZXIyIn0.-x5sF0acTf6H0esIwljqOe99aEK7hTBS9VAH_n7tUx8
+
+###
