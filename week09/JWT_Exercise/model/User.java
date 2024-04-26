@@ -22,10 +22,10 @@ public class User implements ISecurityUser {
     @ManyToMany
     @JoinTable(name = "users_roles",
             joinColumns = {
-                @JoinColumn(name = "user_id", referencedColumnName = "username")
+                    @JoinColumn(name = "user_id", referencedColumnName = "username")
             },
             inverseJoinColumns = {
-                @JoinColumn(name = "role_id", referencedColumnName = "role")
+                    @JoinColumn(name = "role_id", referencedColumnName = "role")
             },
             uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"})
     )
@@ -43,12 +43,13 @@ public class User implements ISecurityUser {
 
     /**
      * Verify a hashed password
+     *
      * @param pw
      * @return
      */
     @Override
     public boolean verifyPassword(String pw) {
-        return BCrypt.checkpw(pw,hashedPassword);
+        return BCrypt.checkpw(pw, hashedPassword);
     }
 
     @Override

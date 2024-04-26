@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<head>
+    <script type="text/javascript">
+        let listArr = function(arr) {
+            if(arr.length == 0){
+                return "";
+            }
+            return '<ul><li>' + arr.join('</li><li>') + '</li></ul>';
+        };
+
+        document.addEventListener("DOMContentLoaded", function() {
+            //part 0.1 to 0.3
+            let someNames = ["Lars", "Peter", "Jan", "Ian"];
+            console.log(listArr(someNames.filter(x => x.length <= 3)));
+
+            var someNamesParagraph = document.getElementById('someNames');
+            someNamesParagraph.innerHTML = listArr(someNames.filter(x => x.length <= 3));
+
+            //part 0.4 to 0.4.1
+            let cars = [
+                { id: 1, year: 1997, make: 'Ford', model: 'E350', price: 3000 },
+                { id: 2, year: 1999, make: 'Chevy', model: 'Venture', price: 4900 },
+                { id: 3, year: 2000, make: 'Chevy', model: 'Venture', price: 5000 },
+                { id: 4, year: 1996, make: 'Jeep', model: 'Grand Cherokee', price: 4799 },
+                { id: 5, year: 2005, make: 'Volvo', model: 'V70', price: 44799 }
+                ];
+
+            let carToString = function(car){
+                return "id: " + car.id + " - year: " + car.year + " - make: " + car.make + " - model: " + car.model + " - price: " + car.price;
+            };
+
+            var newerCars = document.getElementById('1999+');
+            newerCars.innerHTML = listArr(cars.filter(x => x.year >= 1999).map(carToString));
+            var volvos = document.getElementById('volvos');
+            volvos.innerHTML = listArr(cars.filter(x => x.make === "Volvo").map(carToString));
+            var priceLT5000 = document.getElementById('priceLT5000');
+            priceLT5000.innerHTML = listArr(cars.filter(x => x.price <= 5000).map(carToString));
+
+            // part 0.4.2
+            let insertCarSQL = function(cars){
+                let lines = cars.map((car) => [car.id, car.year, car.make, car.model, car.price]);
+                return "INSERT INTO cars (id,year,make,model,price) VALUES (" + lines.map(x => x.join(", ")).join("), (") + ");";
+            };
+            var SQLQUERY = document.getElementById("SQLQUERY");
+            SQLQUERY.innerHTML = insertCarSQL(cars);
+        });
+    </script>
+    <style>
+        span > ul {
+            margin: 0px;
+        }
+    </style>
+</head>
+<body>
+    <p>names:<span id="someNames"></span></p>
+    <p>Cars newer than 1999:<span id="1999+"></span></p>
+    <p>All Volvo’s:<span id="volvos"></span></p>
+    <p>All cars with a price below 5000:<span id="priceLT5000"></span></p>
+    <p>SQL INSERT QUERY:<span id="SQLQUERY"></span></p>
+</body>
