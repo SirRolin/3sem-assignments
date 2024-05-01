@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import SvgComponent from './SvgComponent.jsx';
+import SvgComponent2 from './SvgComponent.jsx';
 import './App.css';
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
 
   function selectCountry(event){
     // If it has a fill (is not the ocean) and it doesn't have a white background (large bodies of water).
-    // I choose to do it this way cause we could later add more to the map that's not supposed to be clicked on either.
+    // I choose to do it this way because we could later add more to the map that's not supposed to be clicked on either.
 
     /*// without the use of useState
     if(event.target.getAttribute("fill") != "null" && event.target.getAttribute("fill") != "#fff"){
@@ -94,7 +94,7 @@ function App() {
 
   return (
     <>
-    <SvgComponent />
+    <SvgComponent2 />
     {dataDumb && (
       <div id="countryInfoDumb">
         <p>Country: {dataDumb[0].name.common}</p>
