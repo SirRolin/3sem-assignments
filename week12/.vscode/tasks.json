@@ -1,0 +1,17 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "dev",
+			"path": "Wednesday/my-react-app",
+			"problemMatcher": [],
+			"label": "npm: dev - Wednesday/my-react-app",
+			"detail": "vite",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
