@@ -16,4 +16,4 @@
         - React: Lists and Keys
         - React: Tick Counter
     - wednesday
-        - Read done and coding for D done, but the json server is not setup for deleting
+        - Full CRUD with Forms

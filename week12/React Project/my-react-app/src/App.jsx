@@ -1,32 +1,30 @@
 import './Styles/App.css'
-import PersonForm from './Components/PersonForm.jsx'
-import PersonList from './Components/PersonList.jsx'
-import { fetchData } from './util/persistence.jsx'
+import PersonForm from './Components/Form.jsx'
+import PersonList from './Components/List.jsx'
+import DAO from './dao/DAO.js'
 import { useEffect, useState } from 'react'
 
 function App() {
   const [page, setPage] = useState("Home Page")
   const [persons, setPersons] = useState([])
   const [editPerson, setEditPerson] = useState({})
-  const APIURL = "http://localhost:3000/api";
+  const personDAO = DAO("http://localhost:3001/api")
 
   function getPersons(callback){
-    fetchData(APIURL, callback)
+    personDAO.GetAll(callback)
   }
 
   useEffect(() => {
     getPersons((data) => {
       setPersons(data)
     })
-  }, [])
+  }, [page])
 
-  function deletePerson(id){
-    //fjern fra api - virker kun nogle gange
-    fetchData(`${APIURL}/${id}`, () => {
-      //fjern fra server array - hvis successful
-      setPersons([...persons.filter(p => p.id != id)])
-    }, "DELETE")
-    
+  function deletePerson(obj){
+    // fjern fra api - virker kun nogle gange
+    personDAO.delete(obj, () => {})
+    // fjern fra server array
+    setPersons([...persons.filter(p => p.id != obj.id)])
   }
 
   function showForm(person = null){
@@ -40,13 +38,12 @@ function App() {
       return;
     }
     if(person.id == "" || person.id == null){
-      console.log("add")
       person.id = parseInt(persons.reduce((p1,p2) => p1.id > p2.id ? p1.id : p2.id)) + 1
-      fetchData(`${APIURL}`, ()=>{}, "POST", person)
+      personDAO.create(person, () => setPersons([...persons, person]))
     } else {
-      console.log("update")
-      fetchData(`${APIURL}/${person.id}`, ()=>{}, "PUT", person)
+      personDAO.update(person, () => setPersons([...persons.filter((p) => p.id != person.id), person]))
     }
+    //setPage('List')
   }
 
   
@@ -54,7 +51,7 @@ function App() {
     <>
       <h1>Person DB</h1>
       <button onClick={() => setPage('List')}>List</button>
-      <button onClick={() => showForm({})}>Edit</button>
+      <button onClick={() => showForm({})}>Add New</button>
       {
         {
           'List': <PersonList persons={persons} deleteCallback={deletePerson} editCallback={showForm} />,
