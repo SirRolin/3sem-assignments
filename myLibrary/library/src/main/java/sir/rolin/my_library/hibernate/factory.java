@@ -17,11 +17,7 @@ public class factory {
 
     private static final HashMap<Set<Class<?>>, EntityManagerFactory> entityManagerFactories = new HashMap<>();
 
-    private static EntityManagerFactory buildLocalhostEntityFactoryConfig(Set<Class<?>> classes, Integer port, String db, String schema, boolean resetDB) {
-        return buildEntityFactoryConfig(classes, "jdbc:postgresql://localhost:" + port + "/", db, schema, resetDB);
-    }
-
-    private static EntityManagerFactory buildEntityFactoryConfig(Set<Class<?>> classes, String Connection, String db, String schema, boolean resetDB) {
+    private static EntityManagerFactory buildEntityFactoryConfig(Set<Class<?>> classes, String connection, String db, String schema, boolean resetDB) {
         try {
             Configuration configuration = new Configuration();
 
@@ -30,7 +26,7 @@ public class factory {
 
             Properties props = new Properties();
 
-            props.put("hibernate.connection.url", Connection + "/" + db + "?currentSchema=" + schema);
+            props.put("hibernate.connection.url", connection + "/" + db + "?currentSchema=" + schema);
             //// create creates a new every time you connect.
             //// update creates only new once and otherwise uses the data that's up
             props.put("hibernate.hbm2ddl.auto", resetDB ? "create" : "update");
@@ -54,7 +50,7 @@ public class factory {
             return getEntityManagerFactory(configuration, props);
         } catch (Throwable ex) {
             System.err.println("Initial SessionFactory creation failed." + ex);
-            System.err.println("The database: " + db + " on localhost:" + port + " is probably not running or it doesn't have the schematic: " + schema);
+            System.err.println("The database: " + db + " on: " + connection + " is probably not running or it doesn't have the schematic: " + schema);
             throw new ExceptionInInitializerError(ex);
         }
     }

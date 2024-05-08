@@ -18,94 +18,97 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 
 public class SecurityTest {
-    private final Gson gson = gsonFactory.getGson();
-    private static RequestSpecification userSession;
-    private static RequestSpecification adminSession;
-    private static LoginDTO userLogin;
-    @BeforeAll
-    static void setUpAll() {
-        hibernate.isDevState = true;
-        RestAssured.baseURI = "http://localhost:8888/api";
+	private final Gson gson = gsonFactory.getGson();
+	private static RequestSpecification userSession;
+	private static RequestSpecification adminSession;
+	private static LoginDTO userLogin;
 
-        Main13.start(8888);
+	@BeforeAll
+	static void setUpAll() {
+		hibernate.isDevState = true;
+		RestAssured.baseURI = "http://localhost:8888/api";
 
-        UserDAO userDAO = new UserDAO();
+		Main13.start(8888);
 
-        //// User
-        userLogin = new LoginDTO("Test","Test");
-        User user = userDAO.createUser(userLogin.getUsername(), userLogin.getPassword());
-        UserDTO userDTO = new UserDTO(user);
-        String auth = SecurityController.getInstance().createToken(userDTO);
+		UserDAO userDAO = new UserDAO();
 
-        userSession = RestAssured
-                .given()
-                .header("Authorization", "BEARER " + auth);
+		//// User
+		userLogin = new LoginDTO("Test", "Test");
+		User user = userDAO.createUser(userLogin.getUsername(), userLogin.getPassword());
+		UserDTO userDTO = new UserDTO(user);
+		String auth = SecurityController.getInstance().createToken(userDTO);
 
-        //// Admin
-        LoginDTO adminLogin = new LoginDTO("Test2","Test2");
-        User admin = userDAO.createUser(adminLogin.getUsername(), adminLogin.getPassword());
-        Role adminRole = userDAO.createRole(UserC.Role.ADMIN.toString());
-        admin = userDAO.addUserRole(adminLogin.getUsername(), adminRole.getRole());
-        UserDTO adminDTO = new UserDTO(admin);
-        String adminAuth = SecurityController.getInstance().createToken(adminDTO);
+		userSession = RestAssured
+				.given()
+				.header("Authorization", "BEARER " + auth);
 
-        adminSession = RestAssured
-                .given()
-                .header("Authorization", "BEARER " + adminAuth);
-    }
+		//// Admin
+		LoginDTO adminLogin = new LoginDTO("Test2", "Test2");
+		User admin = userDAO.createUser(adminLogin.getUsername(), adminLogin.getPassword());
+		Role adminRole = userDAO.createRole(UserC.Role.ADMIN.toString());
+		admin = userDAO.addUserRole(adminLogin.getUsername(), adminRole.getRole());
+		UserDTO adminDTO = new UserDTO(admin);
+		String adminAuth = SecurityController.getInstance().createToken(adminDTO);
 
-    @AfterAll
-    static void tearDownAll() {
-        Main13.stopServer();
-    }
+		adminSession = RestAssured
+				.given()
+				.header("Authorization", "BEARER " + adminAuth);
+	}
 
-    @Test
-    public void registerTest(){
-        LoginDTO login = new LoginDTO("registerTest", "TestPassword");
-        Response Res = RestAssured
-                .given()
-                .when()
-                .body(gson.toJson(login))
-                .post("/auth/register");
-        System.out.println(Res.header("path"));
-        Res.then().statusCode(200);
-    }
+	@AfterAll
+	static void tearDownAll() {
+		Main13.stopServer();
+	}
 
-    @Test
-    public void LoginTest(){
-        Response Res = RestAssured
-                .given()
-                .when()
-                .body(gson.toJson(userLogin))
-                .post("/auth/login");
-        System.out.println(Res.header("path"));
-        Res.then()
-                .statusCode(200);
-    }
-    @Test
-    public void UserDemoTest(){
-        Response Res = userSession
-                .when()
-                .get("/protected/user_demo");
-        Res
-                .then()
-                .statusCode(200);
-    }
-    @Test
-    public void AdminDemoTest(){
-        Response adminRes = adminSession
-                .when()
-                .get("/protected/admin_demo");
-        adminRes
-                .then()
-                .statusCode(200);
+	@Test
+	public void registerTest() {
+		LoginDTO login = new LoginDTO("registerTest", "TestPassword");
+		Response Res = RestAssured
+				.given()
+				.when()
+				.body(gson.toJson(login))
+				.post("/auth/register");
+		System.out.println(Res.header("path"));
+		Res.then().statusCode(200);
+	}
 
-        Response userRes = userSession
-                .when()
-                .get("/protected/admin_demo");
-        adminRes
-                .then()
-                .statusCode(403);
+	@Test
+	public void LoginTest() {
+		Response Res = RestAssured
+				.given()
+				.when()
+				.body(gson.toJson(userLogin))
+				.post("/auth/login");
+		System.out.println(Res.header("path"));
+		Res.then()
+				.statusCode(200);
+	}
 
-    }
+	@Test
+	public void UserDemoTest() {
+		Response Res = userSession
+				.when()
+				.get("/protected/user_demo");
+		Res
+				.then()
+				.statusCode(200);
+	}
+
+	@Test
+	public void AdminDemoTest() {
+		Response adminRes = adminSession
+				.when()
+				.get("/protected/admin_demo");
+
+		adminRes.then()
+				.statusCode(200);
+
+		Response userRes = userSession
+				.when()
+				.get("/protected/admin_demo");
+
+		userRes.then()
+				.statusCode(403);
+
+	}
 }
