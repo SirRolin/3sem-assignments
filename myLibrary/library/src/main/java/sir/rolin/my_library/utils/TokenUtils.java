@@ -85,12 +85,12 @@ public class TokenUtils {
         return timeToExpire(token) > 0;
     }
 
-    private static int timeToExpire(String token) throws ParseException {
+    public static int timeToExpire(String token) throws ParseException {
         SignedJWT jwt = SignedJWT.parse(token);
         return (int) (jwt.getJWTClaimsSet().getExpirationTime().getTime() - new Date().getTime());
     }
 
-    public static <T> T getUserWithRolesFromToken(String token, Function<JWTClaimsSet, T> extractor) {
+    public static <T> T extractFromToken(String token, Function<JWTClaimsSet, T> extractor) {
         try {
             JWTClaimsSet claims = SignedJWT.parse(token).getJWTClaimsSet();
             return extractor.apply(claims);

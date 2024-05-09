@@ -2,25 +2,26 @@ package ReactIII.controller;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
 import ReactIII.DTO.UserDTO;
 import ReactIII.Exceptions.ApiException;
 import ReactIII.Exceptions.NotAuthorizedException;
 import ReactIII.config.gsonFactory;
-import ReactIII.utils.TokenUtils;
+import sir.rolin.my_library.utils.TokenUtils;
+import sir.rolin.my_library.utils.secretKey;
 import ReactIII.utils.myJsonObject;
-import ReactIII.utils.secretKey;
 import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
 import lombok.Getter;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 public class SecurityController implements ISecurity {
     @Getter
@@ -133,9 +134,7 @@ public class SecurityController implements ISecurity {
         String secret = is_deployed ? System.getenv("SECRET_KEY") : SECRET_KEY_STRING;
         try {
             if(TokenUtils.tokenIsValid(token, secret) && TokenUtils.tokenNotExpired(token)){
-                return TokenUtils.getUserWithRolesFromToken(token);
-            } else {
-                return null;
+                return getUserWithRolesFromToken(token);
             }
         } catch (Exception ignoreA){
 
@@ -145,32 +144,30 @@ public class SecurityController implements ISecurity {
 
     @Override
     public boolean tokenIsValid(String token, String secret) throws ParseException, JOSEException, NotAuthorizedException {
-        try {
-            SignedJWT jwt = SignedJWT.parse(token);
-            jwt.verify(new MACVerifier(secret));
-        } catch (java.text.ParseException e) {
-            throw new RuntimeException(e);
-        }
-        return false;
+        return TokenUtils.tokenIsValid(token, secret);
     }
 
     @Override
     public boolean tokenNotExpired(String token) throws ParseException, NotAuthorizedException {
-        try {
-            SignedJWT jwt = SignedJWT.parse(token);
-            return jwt.getJWTClaimsSet().getExpirationTime().after(new Date());
-        } catch (java.text.ParseException e) {
-            throw new RuntimeException(e);
-        }
+        return TokenUtils.tokenNotExpired(token);
     }
 
     @Override
     public UserDTO getUserWithRolesFromToken(String token) throws ParseException {
-        return null;
+        Function<JWTClaimsSet, UserDTO> extractor = claims -> {
+            try {
+                String user = claims.getStringClaim("username");
+                String roles = claims.getStringClaim("roles");
+                return new UserDTO(user, Set.of(roles.split(",")));
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        };
+        return (UserDTO) TokenUtils.extractFromToken(token, extractor);
     }
 
     @Override
     public int timeToExpire(String token) throws ParseException, NotAuthorizedException {
-        return 0;
+        return TokenUtils.timeToExpire(token);
     }
 }
