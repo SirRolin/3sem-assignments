@@ -2,7 +2,7 @@
 FROM eclipse-temurin:17-alpine
 
 # This is the jar file that you want to run
-COPY target/app.jar /app.jar
+COPY target/reactiii-1.0-SNAPSHOT-shaded.jar /app.jar
 
 # This is the port that your javalin application will listen on
 EXPOSE 7070
