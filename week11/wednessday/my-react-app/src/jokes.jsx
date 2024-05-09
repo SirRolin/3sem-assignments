@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 function JokeComponent() {
   // State to store the joke
@@ -9,7 +9,7 @@ function JokeComponent() {
       .then(response => response.json())
       .then(data => setJoke(data.value))
       .catch(error => console.error('Error fetching joke:', error));
-  };
+  }
 
   // useEffect to fetch the joke
   useEffect(() => {

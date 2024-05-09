@@ -12,7 +12,7 @@ function MultiWelcome() {
       <Welcome name="Edith" />
       {/* props-2 of React 1 */}
       <WelcomePerson person={persons[0]}  />
-      {persons.map((person) => <Welcome name={person.firstName} />)}
+          {persons.map((person) => <Welcome key={person.firstName} name={person.firstName} />)}
     </div>
   );
 }
