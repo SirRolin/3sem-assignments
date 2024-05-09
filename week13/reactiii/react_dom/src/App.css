@@ -40,3 +40,24 @@
 .read-the-docs {
   color: #888;
 }
+
+#nav ul {
+  display: flex;
+}
+
+#nav ul li {
+  text-decoration: none;
+  list-style: none;
+  padding: 10px;
+  background-color: green;
+  border-radius: 20px;
+  margin: 5px;
+}
+
+#nav ul li a {
+  color: Black;
+}
+
+.active {
+  color: Red !important;
+}
