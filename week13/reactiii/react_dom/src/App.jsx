@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Header from './Components/Header.jsx';
 import Entity from './Components/Entity.jsx';
 import EntityCreate from './Components/EntityCreate.jsx';
@@ -17,14 +17,14 @@ function App() {
     <>
       <Header />
       <Router>
-        <Route path="/Entity/" content={Entity}/>
-        <Route path="/EntityCreate/" content={EntityCreate}/>
-        <Route path="/EntityDetails/" content={EntityDetails}/>
-        <Route path="/Login/" content={Login}/>
-        <Route path="/Register/" content={Register}/>
-        <Route path="/Home/" content={Home}/>
-        <Route path="/Settings/" content={Settings}/>
-        <Route path="/Logout/" content={Logout}/>
+        <Route path="/Entity/" content={Entity} />
+        <Route path="/EntityCreate/" content={EntityCreate} />
+        <Route path="/EntityDetails/" content={EntityDetails} />
+        <Route path="/Login/" content={Login} />
+        <Route path="/Register/" content={Register} />
+        <Route path="/Home/" content={Home} />
+        <Route path="/Settings/" content={Settings} />
+        <Route path="/Logout/" content={Logout} />
       </Router>
     </>
   )
