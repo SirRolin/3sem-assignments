@@ -1,9 +1,9 @@
 package ReactIII.controller;
 
 import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.crypto.MACVerifier;
+//import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
+//import com.nimbusds.jwt.SignedJWT;
 
 import ReactIII.DTO.UserDTO;
 import ReactIII.Exceptions.ApiException;
