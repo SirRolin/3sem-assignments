@@ -15,11 +15,11 @@ function Header(){
             <li><NavLink to="/Entity" activeClassName="active">Entity</NavLink></li>
             <li><NavLink to="/EntityCreate/" activeClassName="active">EntityCreate</NavLink></li>
             <li><NavLink to="/EntityDetails/" activeClassName="active">EntityDetails</NavLink></li>
-            <li><NavLink to="/Logout" activeClassName="active" onClick={setLoggedIn(false)}>Logout</NavLink></li>
+            <li><NavLink to="/Logout" activeClassName="active" onClick={() => setLoggedIn(false)}>Logout</NavLink></li>
           </>
           :
           <>
-            <li><NavLink to="/Login" activeClassName="active" onClick={setLoggedIn(true)}>Login</NavLink></li>
+            <li><NavLink to="/Login" activeClassName="active" onClick={() => setLoggedIn(true)}>Login</NavLink></li>
             <li><NavLink to="/Register" activeClassName="active">Register</NavLink></li>
           </>
         }

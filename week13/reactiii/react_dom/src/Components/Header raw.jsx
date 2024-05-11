@@ -15,11 +15,11 @@ function HeaderRaw(){
             <li><Link to="/Entity">Entity</Link></li>
             <li><Link to="/EntityCreate/">EntityCreate</Link></li>
             <li><Link to="/EntityDetails/">EntityDetails</Link></li>
-            <li><Link to="/Logout">Logout</Link></li>
+            <li><Link to="/Logout" onClick={() => setLoggedIn(false)}>Logout</Link></li>
           </>
           :
           <>
-            <li><Link to="/Login">Login</Link></li>
+            <li><Link to="/Login" onClick={() => setLoggedIn(true)}>Login</Link></li>
             <li><Link to="/Register">Register</Link></li>
           </>
         }

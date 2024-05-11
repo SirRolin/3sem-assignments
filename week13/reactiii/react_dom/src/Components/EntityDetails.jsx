@@ -1,10 +1,11 @@
-
+import { Outlet } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 export function EntityDetailId(){
-  let parans = useParams();
+  let params = useParams();
   return (
     <>
-      <h2>post = {useParams.entityId}</h2>
+      <h2>Entity details: {params.entityId}</h2>
     </>
   )
 }

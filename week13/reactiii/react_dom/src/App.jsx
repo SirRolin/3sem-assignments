@@ -24,7 +24,7 @@ function App() {
           <Route path="/Entity/" element={<Entity />} />
           <Route path="/EntityCreate/" element={<EntityCreate />} />
           <Route path="/EntityDetails/" element={<EntityDetails />} >
-            <Route index element={<h1>Entity Detail:</h1>} />
+            <Route index element={<h2>Entity Detail:</h2>} />
             <Route path=":entityId" element={<EntityDetailId />} />
           </Route>
           <Route path="/Login/" element={<Login />} />
