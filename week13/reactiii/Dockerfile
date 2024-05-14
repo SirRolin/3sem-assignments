@@ -5,7 +5,7 @@ FROM eclipse-temurin:17-alpine
 COPY target/reactiii-1.0-SNAPSHOT-shaded.jar /app.jar
 
 # copy library jar file
-COPY target/../../../myLibrary/library/target/library-1.0-SNAPSHOT.jar ../../myLibrary/library/target/library-1.0-SNAPSHOT.jar
+# COPY target/../../../myLibrary/library/target/library-1.0-SNAPSHOT.jar ../../myLibrary/library/target/library-1.0-SNAPSHOT.jar
 
 # This is the port that your javalin application will listen on
 EXPOSE 7070

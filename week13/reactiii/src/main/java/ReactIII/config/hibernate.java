@@ -14,8 +14,8 @@ public class hibernate {
     public static boolean isDevState = false;
 
     public static EntityManagerFactory getEntityManagerFactoryConfig(){
-        String connection =  System.getenv("CONNECTION_STR");
-        String db = System.getenv("DB_NAME");
+        String connection =  System.getenv("CONNECTION_STR") != null ? System.getenv("CONNECTION_STR") :"jdbc:postgresql://localhost:5432";
+        String db = System.getenv("DB_NAME") != null ? System.getenv("DB_NAME") :"reactIII";
         String schema = System.getenv("DB_SCHEMA") != null ? System.getenv("DB_SCHEMA") :"public";
         if(isDevState)
         {
