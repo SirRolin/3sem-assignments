@@ -18,8 +18,9 @@ jobs:
           distribution: 'temurin'
       - # from github
         name: Build and install myLibrary
-        run: mvn clean install
-        working-directory: ./myLibrary/library
+        run: |
+          cd myLibrary/library
+          mvn clean install
       -
         name: Build with Maven
         run: mvn --batch-mode --update-snapshots package
