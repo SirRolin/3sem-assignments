@@ -110,8 +110,6 @@
             <groupId>sir.rolin.my_library</groupId>
             <artifactId>library</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/../../myLibrary/library/target/library-1.0-SNAPSHOT.jar</systemPath>
         </dependency>
         <!--  TESTING      -->
 
