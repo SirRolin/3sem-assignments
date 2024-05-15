@@ -19,7 +19,7 @@ jobs:
       - # from github
         name: Build and install myLibrary
         run: |
-          cd myLibrary/library
+          cd ./myLibrary/library
           mvn clean install
       -
         name: Build with Maven
