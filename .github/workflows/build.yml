@@ -16,6 +16,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      - # from github
+        name: Build and install myLibrary
+        run: |
+          cd path/to/myLibrary
+          mvn clean install
       -
         name: Build with Maven
         run: mvn --batch-mode --update-snapshots package
