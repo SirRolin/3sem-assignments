@@ -2,7 +2,7 @@
 FROM eclipse-temurin:17-alpine
 
 # This is the jar file that you want to run
-COPY target/reactiii-1.0-SNAPSHOT-shaded.jar /app.jar
+COPY target/reactiii-1.0-shaded.jar /app.jar
 
 # copy library jar file
 # COPY target/../../../myLibrary/library/target/library-1.0-SNAPSHOT.jar ../../myLibrary/library/target/library-1.0-SNAPSHOT.jar
