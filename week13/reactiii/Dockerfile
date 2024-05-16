@@ -1,6 +1,8 @@
 # Use a Java runtime as a base image
 FROM eclipse-temurin:17-alpine
 
+run dir -s target/
+
 # This is the jar file that you want to run
 COPY week13/reactiii/target/app.jar /app.jar
 
