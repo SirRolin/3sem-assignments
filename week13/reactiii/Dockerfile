@@ -2,7 +2,7 @@
 FROM eclipse-temurin:17-alpine
 
 # This is the jar file that you want to run
-COPY target/app.jar /app.jar
+COPY week13/reactiii/target/app.jar /app.jar
 
 # copy library jar file
 # COPY target/../../../myLibrary/library/target/library-1.0-SNAPSHOT.jar ../../myLibrary/library/target/library-1.0-SNAPSHOT.jar
