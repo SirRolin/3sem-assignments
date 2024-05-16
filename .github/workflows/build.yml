@@ -39,8 +39,8 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v4
         with:
-          # context: ./week13/reactiii/
-          file: ./week13/reactiii/Dockerfile
+          context: week13/reactiii
+          file: week13/reactiii/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/3sem:latest
           
