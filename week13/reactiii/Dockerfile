@@ -1,6 +1,8 @@
 # Use a Java runtime as a base image
 FROM eclipse-temurin:17-alpine
 
+LS
+
 # This is the jar file that you want to run
 COPY target/week13/reactiii/reactiii-1.0-shaded.jar /app.jar
 
