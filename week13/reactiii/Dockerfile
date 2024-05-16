@@ -4,7 +4,7 @@ FROM eclipse-temurin:17-alpine
 run dir -s target/
 
 # This is the jar file that you want to run
-COPY target/*.jar /*.jar
+COPY target/app.jar ../../app.jar
 
 # This is the port that your javalin application will listen on
 EXPOSE 7070
